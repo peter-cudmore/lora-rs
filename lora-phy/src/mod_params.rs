@@ -1,4 +1,4 @@
-pub use lora_modulation::{Bandwidth, CodingRate, SpreadingFactor};
+pub use lora_modulation::{Bandwidth, CodingRate, SpreadingFactor, BaseBandModulationParams};
 
 /// Errors types reported during LoRa physical layer processing
 #[allow(clippy::upper_case_acronyms)]
@@ -77,6 +77,7 @@ pub enum RxMode {
 }
 
 /// Modulation parameters for a send and/or receive communication channel
+#[derive(Clone, Debug)]
 pub struct ModulationParams {
     pub(crate) spreading_factor: SpreadingFactor,
     pub(crate) bandwidth: Bandwidth,
@@ -84,6 +85,13 @@ pub struct ModulationParams {
     pub(crate) low_data_rate_optimize: u8,
     pub(crate) frequency_in_hz: u32,
 }
+
+impl Into<BaseBandModulationParams> for ModulationParams {
+    fn into(self) -> BaseBandModulationParams {
+        BaseBandModulationParams::new(self.spreading_factor,self.bandwidth, self.coding_rate)
+    }
+}
+
 
 /// Packet parameters for a send or receive communication channel
 pub struct PacketParams {
